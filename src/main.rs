@@ -1,6 +1,7 @@
 #![warn(clippy::all, clippy::pedantic)]
 use std::io::stdin;
 
+#[derive(Debug)]
 struct Visitor {
     name: String,
     greeting: String,
@@ -25,17 +26,29 @@ fn get_name() -> String {
 }
 
 fn main() {
-    let visitor_list = [
+    let mut visitor_list = vec![
         Visitor::new("andrew", "Hello bro!"),
         Visitor::new("anb", "Hi master!"),
         Visitor::new("fil", "Hello kitty!"),
     ];
-    println!("Hi, your name please!");
-    let name = get_name();
-    let known_visitor = visitor_list.iter().find(|visitor| visitor.name == name);
 
-    match known_visitor {
-        Some(visitor) => visitor.greet_visitor(),
-        None => println!("You are not on the visitor list. Go away!"),
+    loop {
+        println!("Hi, your name please! (empty to quit)");
+        let name = get_name();
+
+        let known_visitor = visitor_list.iter().find(|visitor| visitor.name == name);
+
+        match known_visitor {
+            Some(visitor) => visitor.greet_visitor(),
+            None => {
+                if name.is_empty() {
+                    break;
+                }
+                println!("{} is not on the visitor list.", name);
+                visitor_list.push(Visitor::new(&name, "New friend"));
+            }             
+        }
     }
+    println!("The final list:");
+    println!("{:#?}", visitor_list);
 }
