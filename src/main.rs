@@ -38,15 +38,14 @@ fn main() {
 
         let known_visitor = visitor_list.iter().find(|visitor| visitor.name == name);
 
-        match known_visitor {
-            Some(visitor) => visitor.greet_visitor(),
-            None => {
-                if name.is_empty() {
-                    break;
-                }
-                println!("{} is not on the visitor list.", name);
-                visitor_list.push(Visitor::new(&name, "New friend"));
-            }             
+        if let Some(visitor) = known_visitor {
+            visitor.greet_visitor();
+        } else {
+            if name.is_empty() {
+                break;
+            };
+            println!("{} is not on the visitor list.", name);
+            visitor_list.push(Visitor::new(&name, "New friend"));
         }
     }
     println!("The final list:");
